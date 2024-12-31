@@ -1,0 +1,205 @@
+﻿@page
+@model webApp.Pages.Account.NewListingModel
+@{
+    ViewData["Title"] = "Yeni İlan Ekle";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="form-container">
+    <form method="post" enctype="multipart/form-data" id="listingForm">
+        <div class="form-group">
+            <label for="name">İlan Başlığı</label>
+            <input type="text" id="name" name="Listing.Name" class="form-control" placeholder="Başlık giriniz" required />
+        </div>
+
+        <div class="form-group">
+            <label for="price">Fiyat</label>
+            <input type="number" id="price" name="Listing.Price" class="form-control" placeholder="Fiyat giriniz" required />
+        </div>
+
+        <div class="form-group">
+            <label for="description">Açıklama</label>
+            <textarea id="description" name="Listing.Description" class="form-control" placeholder="İlan açıklaması" required></textarea>
+        </div>
+
+        <!-- Bileşen Seçimi -->
+        <div class="form-group">
+            <label for="motherboard">Anakart</label>
+            <input type="text" id="motherboard" name="Listing.Motherboard" class="form-control" placeholder="Anakart seçin..." list="motherboard-options" />
+            <datalist id="motherboard-options">
+                @foreach (var motherboard in Model.MotherboardList)
+                {
+                    <option value="@motherboard">@motherboard</option>
+                }
+            </datalist>
+        </div>
+
+        <div class="form-group">
+            <label for="cpu">İşlemci</label>
+            <input type="text" id="cpu" name="Listing.CPU" class="form-control" placeholder="İşlemci seçin..." list="cpu-options" />
+            <datalist id="cpu-options">
+                @foreach (var cpu in Model.CpuList)
+                {
+                    <option value="@cpu">@cpu</option>
+                }
+            </datalist>
+        </div>
+
+        <div class="form-group">
+            <label for="ram">RAM</label>
+            <input type="text" id="ram" name="Listing.RAM" class="form-control" placeholder="RAM seçin..." list="ram-options" />
+            <datalist id="ram-options">
+                @foreach (var ram in Model.RamList)
+                {
+                    <option value="@ram">@ram</option>
+                }
+            </datalist>
+        </div>
+
+        <div class="form-group">
+            <label for="gpu">Ekran Kartı</label>
+            <input type="text" id="gpu" name="Listing.GPU" class="form-control" placeholder="Ekran Kartı seçin..." list="gpu-options" />
+            <datalist id="gpu-options">
+                @foreach (var gpu in Model.GpuList)
+                {
+                    <option value="@gpu">@gpu</option>
+                }
+            </datalist>
+        </div>
+
+        <div class="form-group">
+            <label for="storage">Depolama</label>
+            <input type="text" id="storage" name="Listing.Storage" class="form-control" placeholder="Depolama seçin..." list="storage-options" />
+            <datalist id="storage-options">
+                @foreach (var storage in Model.StorageList)
+                {
+                    <option value="@storage">@storage</option>
+                }
+            </datalist>
+        </div>
+
+        <div class="form-group">
+            <label for="powerSupply">Güç Kaynağı</label>
+            <input type="text" id="powerSupply" name="Listing.PowerSupply" class="form-control" placeholder="Güç Kaynağı seçin..." list="powerSupply-options" />
+            <datalist id="powerSupply-options">
+                @foreach (var powerSupply in Model.PowerSupplyList)
+                {
+                    <option value="@powerSupply">@powerSupply</option>
+                }
+            </datalist>
+        </div>
+
+        <div class="form-group">
+            <label for="case">Kasa</label>
+            <input type="text" id="case" name="Listing.Case" class="form-control" placeholder="Kasa seçin..." list="case-options" />
+            <datalist id="case-options">
+                @foreach (var caseItem in Model.CaseList)
+                {
+                    <option value="@caseItem">@caseItem</option>
+                }
+            </datalist>
+        </div>
+
+        <div class="form-group">
+            <label for="images">Resimler</label>
+            <input type="file" id="images" name="Listing.ImageUrls" class="form-control" accept="image/*" multiple />
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">İlanı Kaydet</button>
+        </div>
+    </form>
+</div>
+
+
+@section styles{
+
+    <style>
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+    .form-actions {
+        text-align: right;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+</style>
+    
+    <style>
+        input[list] {
+            position: relative;
+            z-index: 1;
+        }
+
+        datalist option {
+            display: none;
+            position: relative;
+            z-index: 2;
+            background: #ffffff;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+</style>
+
+}
+
+@section scripts{
+
+    <script>
+
+        document.getElementById("description").addEventListener("input", function () {
+			var text = document.getElementById("description").value;
+			var wordCount = text.trim().split(/\s+/).length;
+			document.getElementById("wordCount").innerText = wordCount;
+
+            if (wordCount > 2) {
+				document.getElementById("wordCount").style.color = "red";
+			} else {
+				document.getElementById("wordCount").style.color = "black";
+			}
+		});
+
+    </script>
+  
+}

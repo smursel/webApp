@@ -1,0 +1,253 @@
+﻿@page "{id:int?}"
+@model DetailsModel
+@{
+    ViewData["Title"] = "Listing Details";
+}
+
+
+<h1 style="margin-top:100px"> </style> @ViewData["Title"]<hr /></h1>
+
+<div class="container">
+    <!-- Detaylar -->
+    <div class="details-section">
+        @if (Model.VisualListing != null)
+        {
+            <div class="product-details">
+                <!-- Fotoğraf Galerisi -->
+                @if (Model.VisualListing.ImageUrls != null && Model.VisualListing.ImageUrls.Any())
+                {
+                    <div class="image-gallery">
+                        @foreach (var imageUrl in Model.VisualListing.ImageUrls)
+                        {
+                            <img src="@imageUrl" alt="@Model.VisualListing.Name" class="product-image" style="width:300px; height:auto; margin:5px;" />
+                        }
+                    </div>
+                }
+
+                <!-- Ürün Özellikleri -->
+                <div class="product-info">
+                    <hr />
+                    <h2>@Model.VisualListing.Name</h2>
+                    <hr />
+                    <p><strong>Price:</strong> @Model.VisualListing.Price?.ToString("C")</p>
+                    <p><strong>Description:</strong> @Model.VisualListing.Description</p>
+
+                    <!-- GPU Bilgisi -->
+                    @if (!string.IsNullOrEmpty(Model.VisualListing.GpuName))
+                    {
+                        <p><strong>GPU:</strong> @Model.VisualListing.GpuName</p>
+                    }
+
+                    <!-- CPU Bilgisi -->
+                    @if (!string.IsNullOrEmpty(Model.VisualListing.CpuName))
+                    {
+                        <p><strong>CPU:</strong> @Model.VisualListing.CpuName</p>
+                    }
+
+                    <!-- RAM Bilgileri -->
+                    @if (!string.IsNullOrEmpty(Model.VisualListing.RamName))
+                    {
+                        <p><strong>RAM:</strong> @Model.VisualListing.RamName</p>
+                    }
+                    else
+                    {
+                        <p><strong>RAM:</strong> Bilgi bulunamadı</p>
+                    }
+
+
+                    <!-- Anakart Bilgisi -->
+                    @if (!string.IsNullOrEmpty(Model.VisualListing.MotherboardName))
+                    {
+                        <p><strong>Motherboard:</strong> @Model.VisualListing.MotherboardName</p>
+                    }
+                </div>
+
+                <!-- Telefon Numarası Gösterme -->
+                <div class="phone-number-section">
+                    <button id="showPhoneButton" class="btn btn-primary" onclick="showPhoneNumber()">Show Phone Number</button>
+                    <p id="phoneNumber" style="display:none; margin-top:10px;"><strong>Phone Number:</strong> @Model.PhoneNumber</p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <p>No product details available.</p>
+        }
+    </div>
+
+    <!-- Önerilen PC'ler -->
+    <div class="recommended-section">
+        <h3>Recommended PCs</h3>
+        @if (Model.RecommendedPCs != null && Model.RecommendedPCs.Any())
+        {
+            <ul class="pc-list">
+                @foreach (var pc in Model.RecommendedPCs)
+                {
+                    <li class="pc-item">
+                        <div class="pc-image">
+                            <img src="@pc.ImageUrls?.FirstOrDefault() ?? " https: //via.placeholder.com/150"" alt="@pc.Name" />
+                            <div class="pc-details">
+                                <h6>@pc.Name</h6>
+                                <p>Price: @pc.Price?.ToString("C")</p>
+                                <p>GPU: @pc.GpuName</p>
+                                <p>CPU: @pc.CpuName</p>
+                                <p>RAM: @pc.RamName</p>
+                                <p>Storage: @string.Join(", ", pc.storageName ?? new List<string>())</p>
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No recommendations available.</p>
+        }
+    </div>
+
+</div>
+
+<script>
+    function showPhoneNumber() {
+        document.getElementById("phoneNumber").style.display = "block";
+        document.getElementById("showPhoneButton").style.display = "none";
+    }
+</script>
+
+<style>
+    .container {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+    }
+
+    .details-section {
+        flex: 2;
+        border-right: 1px solid #ccc;
+        padding-right: 20px;
+    }
+
+    .recommended-section {
+        flex: 1;
+        padding-left: 20px;
+    }
+
+    .product-details {
+        margin-bottom: 20px;
+    }
+
+    .image-gallery {
+        margin-bottom: 20px;
+    }
+
+    .product-info p {
+        margin: 5px 0;
+    }
+
+    .phone-number-section {
+        margin-top: 20px;
+    }
+</style>
+
+<style>
+    .pc-list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .pc-item {
+        position: relative;
+        width: 200px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+    }
+
+        .pc-item:hover {
+            transform: scale(1.2);
+        }
+
+    .pc-image {
+        position: relative;
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+    }
+
+        .pc-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-bottom: 1px solid #ddd;
+        }
+
+    .pc-details {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .pc-item:hover .pc-details {
+        opacity: 1;
+    }
+
+    .pc-details h6 {
+        margin: 0;
+        font-size: 10px;
+    }
+
+    .pc-details p {
+        margin: 5px 0;
+        font-size: 0.7em;
+    }
+</style>
+
+<style>
+    .p{
+        
+    }
+
+    .pc-list {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .pc-item {
+        flex: 0 0 calc(40%); /* 50% width minus margin */
+        box-sizing: border-box;
+        margin: 10px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    .pc-image img {
+        width: 100%; /* Ensure image takes full width of container */
+        height: auto;
+    }
+
+    .pc-details {
+        margin-top: 10px;
+    }
+
+</style>

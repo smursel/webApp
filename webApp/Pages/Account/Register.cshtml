@@ -1,0 +1,151 @@
+﻿@page
+@model webApp.Pages.Account.Register
+@{
+    ViewData["Title"] = "Kayıt Ol";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="form-container">
+    <h1>Kayıt Ol</h1>
+    <form id="registerForm" method="post" onsubmit="handleFormSubmit(event)">
+        <label for="name">Ad</label>
+        <input type="text" id="name" name="Name" maxlength="36" required />
+
+        <label for="email">E-posta Adresi</label>
+        <input type="email" id="email" name="Email" required />
+
+        <label for="password">Şifre</label>
+        <input type="password" id="registerPassword" name="Password" maxlength="36" required />
+        <p id="passwordError" style="display:none; color:red;"></p>
+
+        <div class="checkbox-container">
+            <input type="checkbox" id="showPassword" onclick="togglePasswordVisibility()" />
+            <label for="showPassword">Şifreyi Göster</label>
+        </div>
+
+        <button type="submit">
+            Kayıt Ol
+            <span class="spinner" style="display:none;">Yükleniyor...</span>
+        </button>
+    </form>
+    <p>Hesabınız var mı? <a href="/Account/Login">Giriş Yap</a></p>
+</div>
+
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .form-container {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+    }
+
+        .form-container h1 {
+            color: #004aad;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .form-container label {
+            display: block;
+            margin-top: 10px;
+            text-align: left;
+            margin-left: 8px;
+            color: #333333;
+            font-weight: bold;
+        }
+
+        .form-container input[type="text"],
+        .form-container input[type="email"],
+        .form-container input[type="password"] {
+            width: 90%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 2px solid #cccccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-container button {
+            background-color: #004aad;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+            .form-container button:hover {
+                background-color: #00337a;
+            }
+
+        .form-container p {
+            color: #666666;
+            font-size: 12px;
+        }
+
+        .form-container a {
+            color: #004aad;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+            .form-container a:hover {
+                text-decoration: underline;
+            }
+
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+        margin-top: 0px;
+        text-align: left;
+        margin-left: 5px;
+    }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #cccccc;
+            border-radius: 3px;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .checkbox-container label {
+            font-size: 12px;
+            color: #333333;
+            margin: 0;
+        }
+</style>
+
+<script>
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById("registerPassword");
+        passwordField.type = passwordField.type === "password" ? "text" : "password";
+    }
+
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        const spinner = document.querySelector(".spinner");
+        spinner.style.display = "inline-block";
+        setTimeout(() => {
+            document.getElementById("registerForm").submit();
+        }, 1000);
+    }
+</script>

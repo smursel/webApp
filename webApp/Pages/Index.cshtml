@@ -1,0 +1,778 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Bilgisayar Satış Sitesi";
+}
+<html lang="en">
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sol Filtre Bölümü -->
+        <div class="bg-light vh-100 position-fixed filter-panel" style="width: 250px; left: 0; top: 0; padding: 20px; box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);">
+            <h5 class="mt-3">Filtreler</h5>
+            <form method="get">
+                <!-- Marka -->
+                <div class="filter-group">
+
+                    <!-- İşlemci Filtreleme -->
+                    <div class="filter-item">
+                        <button class="filter-header" type="button" onclick="toggleFilter('processorFilter')">
+                            İşlemci
+                        </button>
+                        <div id="processorFilter" class="filter-content">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="Brand" id="Intel" value="Intel" onclick="clearTextInput()">
+                                <label class="form-check-label" for="Intel">Intel</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="Brand" id="AMD" value="AMD" onclick="clearTextInput()">
+                                <label class="form-check-label" for="AMD">AMD</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Spesifik İşlemci Arama -->
+                    <div class="filter-item">
+                        <button class="filter-header" type="button" onclick="toggleFilter('specificProcessorFilter')">
+                            Spesifik İşlemci Ara
+                        </button>
+                        <div id="specificProcessorFilter" class="filter-content">
+                            <input list="brandsList" id="autocompleteInputBrands" name="searchQuery" class="form-control"
+                                   placeholder="Bir marka girin..." />
+                            <datalist id="brandsList">
+                                <!-- Dinamik olarak doldurulacak -->
+                            </datalist>
+                        </div>
+                    </div>
+
+                    <!-- Cooler Filtreleme -->
+                    <div class="filter-item">
+                        <button class="filter-header" type="button" onclick="toggleFilter('coolerFilter')">
+                            Soğutucu
+                        </button>
+                        <div id="coolerFilter" class="filter-content">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="Cooler" id="AirCooler" value="Air Cooler">
+                                <label class="form-check-label" for="AirCooler">Air Cooler</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="Cooler" id="LiquidCooler" value="Liquid Cooler">
+                                <label class="form-check-label" for="LiquidCooler">Liquid Cooler</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-item">
+                        <button class="filter-header" type="button" onclick="toggleFilter('gpuFilter')">
+                            Ekran Kartı Seçimi
+                        </button>
+                        <div id="gpuFilter" class="filter-content">
+                            <!-- RTX Serisi Seçimi -->
+                            <div class="form-group mb-3">
+                                <label>RTX Serileri:</label>
+                                <div class="d-flex flex-wrap">
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="checkbox" id="RTX4000" value="RTX4000" name="GpuSeries" onchange="displayGpuOptions(this)">
+                                        <label class="form-check-label" for="RTX4000">RTX 4000</label>
+                                    </div>
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="checkbox" id="RTX3000" value="RTX3000" name="GpuSeries" onchange="displayGpuOptions(this)">
+                                        <label class="form-check-label" for="RTX3000">RTX 3000</label>
+                                    </div>
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="checkbox" id="RTX2000" value="RTX2000" name="GpuSeries" onchange="displayGpuOptions(this)">
+                                        <label class="form-check-label" for="RTX2000">RTX 2000</label>
+                                    </div>
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="checkbox" id="RTX1000" value="RTX1000" name="GpuSeries" onchange="displayGpuOptions(this)">
+                                        <label class="form-check-label" for="RTX1000">RTX 1000</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Radeon Serisi Seçimi -->
+                            <div class="form-group mb-3 mt-4">
+                                <label>Radeon RX Serileri:</label>
+                                <div class="d-flex flex-wrap">
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="checkbox" id="RX7000" value="RX7000" name="GpuSeries" onchange="displayGpuOptions(this)">
+                                        <label class="form-check-label" for="RX7000">RX 7000</label>
+                                    </div>
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="checkbox" id="RX6000" value="RX6000" name="GpuSeries" onchange="displayGpuOptions(this)">
+                                        <label class="form-check-label" for="RX6000">RX 6000</label>
+                                    </div>
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="checkbox" id="RX5000" value="RX5000" name="GpuSeries" onchange="displayGpuOptions(this)">
+                                        <label class="form-check-label" for="RX5000">RX 5000</label>
+                                    </div>
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="checkbox" id="RXVega" value="RXVega" name="GpuSeries" onchange="displayGpuOptions(this)">
+                                        <label class="form-check-label" for="RXVega">RX Vega</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Seçilen ekran kartları -->
+                            <div id="gpuOptionsContainer" class="mt-4">
+                                <!-- RTX ve Radeon modelleri burada görüntülenecek -->
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- RAM Seçimi -->
+                    <div class="filter-item">
+                        <button class="filter-header" type="button" onclick="toggleFilter('ramFilter')">
+                            RAM Seçimi
+                        </button>
+                        <div id="ramFilter" class="filter-content">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="ramSize" id="ram8" value="8">
+                                <label class="form-check-label" for="ram8">8GB</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="ramSize" id="ram16" value="16">
+                                <label class="form-check-label" for="ram16">16GB</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="ramSize" id="ram32" value="32">
+                                <label class="form-check-label" for="ram32">32GB</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="ramSize" id="ram64" value="64">
+                                <label class="form-check-label" for="ram64">64GB</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Depolama Seçimi -->
+                    <div class="filter-item">
+                        <button class="filter-header" type="button" onclick="toggleFilter('storageFilter')">
+                            Depolama Seçimi
+                        </button>
+                        <div id="storageFilter" class="filter-content">
+                            <!-- Depolama Boyutu Seçimi -->
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="storageSize" id="storage256" value="256">
+                                <label class="form-check-label" for="storage256">256GB</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="storageSize" id="storage512" value="512">
+                                <label class="form-check-label" for="storage512">512GB</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="storageSize" id="storage1tb" value="1024">
+                                <label class="form-check-label" for="storage1tb">1TB</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="radio" name="storageSize" id="storage2tb" value="2048">
+                                <label class="form-check-label" for="storage2tb">2TB</label>
+                            </div>
+                            <div class="mt-3">
+                                <input type="number" id="manualStorageInput" class="form-control" placeholder="Diğer depolama boyutu (GB)"
+                                       onfocus="clearStorageSelection()" />
+                            </div>
+
+                            <!-- Depolama Tipi Seçimi -->
+                            <div class="mt-4">
+                                <label>Depolama Tipi:</label>
+                                <div class="d-flex flex-wrap">
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="checkbox" id="storageTypeSSD" value="SSD" name="storageType">
+                                        <label class="form-check-label" for="storageTypeSSD">SSD</label>
+                                    </div>
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="checkbox" id="storageTypeHDD" value="HDD" name="storageType">
+                                        <label class="form-check-label" for="storageTypeHDD">HDD</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Power Supply -->
+                    <div class="filter-item">
+                        <button class="filter-header" type="button" onclick="toggleFilter('powerSupplyFilter')">
+                            Güç Kaynağı
+                        </button>
+                        <div id="powerSupplyFilter" class="filter-content">
+                            <input type="text" id="powerSupplyInput" class="form-control" placeholder="Bir wat değeri yazın..." />
+                        </div>
+                    </div>
+
+                    <!-- Marka -->
+                    <div class="filter-item">
+                        <button class="filter-header" type="button" onclick="toggleFilter('brandFilter')">
+                            Marka
+                        </button>
+                        <div id="brandFilter" class="filter-content">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="asus" value="ASUS" />
+                                <label class="form-check-label" for="asus">Powered by ASUS</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="galax" value="GALAX" />
+                                <label class="form-check-label" for="galax">Powered by GALAX</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="msi" value="MSI" />
+                                <label class="form-check-label" for="msi">Powered by MSI</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-item">
+                        <button class="filter-header" type="button" onclick="toggleFilter('caseTypeFilter')">
+                            Kasa Tipi
+                        </button>
+                        <div id="caseTypeFilter" class="filter-content">
+                            <!-- Kasa Tipi Butonları -->
+                            <div class="d-flex flex-wrap">
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" id="MicroATXSlim" value="MicroATX Slim" name="caseType">
+                                    <label class="form-check-label" for="MicroATXSlim">MicroATX Slim</label>
+                                </div>
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" id="MicroATXMidTower" value="MicroATX Mid Tower" name="caseType">
+                                    <label class="form-check-label" for="MicroATXMidTower">MicroATX Mid Tower</label>
+                                </div>
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" id="ATXTestBench" value="ATX Test Bench" name="caseType">
+                                    <label class="form-check-label" for="ATXTestBench">ATX Test Bench</label>
+                                </div>
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" id="MiniITXTower" value="Mini ITX Tower" name="caseType">
+                                    <label class="form-check-label" for="MiniITXTower">Mini ITX Tower</label>
+                                </div>
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" id="ATXFullTower" value="ATX Full Tower" name="caseType">
+                                    <label class="form-check-label" for="ATXFullTower">ATX Full Tower</label>
+                                </div>
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" id="ATXMidTower" value="ATX Mid Tower" name="caseType">
+                                    <label class="form-check-label" for="ATXMidTower">ATX Mid Tower</label>
+                                </div>
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" id="ATXDesktop" value="ATX Desktop" name="caseType">
+                                    <label class="form-check-label" for="ATXDesktop">ATX Desktop</label>
+                                </div>
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" id="HTPC" value="HTPC" name="caseType">
+                                    <label class="form-check-label" for="HTPC">HTPC</label>
+                                </div>
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" id="MiniITXDesktop" value="Mini ITX Desktop" name="caseType">
+                                    <label class="form-check-label" for="MiniITXDesktop">Mini ITX Desktop</label>
+                                </div>
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" id="MicroATXMiniTower" value="MicroATX Mini Tower" name="caseType">
+                                    <label class="form-check-label" for="MicroATXMiniTower">MicroATX Mini Tower</label>
+                                </div>
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" id="ATXMiniTower" value="ATX Mini Tower" name="caseType">
+                                    <label class="form-check-label" for="ATXMiniTower">ATX Mini Tower</label>
+                                </div>
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" id="MiniITXTestBench" value="Mini ITX Test Bench" name="caseType">
+                                    <label class="form-check-label" for="MiniITXTestBench">Mini ITX Test Bench</label>
+                                </div>
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" id="MicroATXDesktop" value="MicroATX Desktop" name="caseType">
+                                    <label class="form-check-label" for="MicroATXDesktop">MicroATX Desktop</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+                <!-- Fiyat Aralığı -->
+                <div class="form-group mb-3">
+                    <label>Fiyat Aralığı:</label>
+                    <div id="price-slider" class="my-3"></div>
+                    <input type="hidden" id="minPrice" name="minPrice" />
+                    <input type="hidden" id="maxPrice" name="maxPrice" />
+                    <div class="d-flex justify-content-between">
+                        <span id="slider-min">0 TL</span>
+                        <span id="slider-max">50,000 TL</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Filtrele</button>
+            </form>
+        </div>
+
+        <!-- Ana Vitrin Alanı -->
+        <div class="col-md-9 col-lg-10 offset-lg-2" style="margin-left: 250px; height: 80vh; overflow-y: auto;">
+            <div class="container">
+                <h5 class="mb-3 mt-3">Bilgisayarlar</h5>
+                <div class="row">
+                    @foreach (var computer in Model.Listings)
+                    {
+                        <div class="col-md-4">
+                            <div class="card mb-4 shadow-sm">
+                                <img src="@computer.ImageUrls[0]" class="card-img-top" alt="@computer.Name">
+                                <div class="card-body">
+                                    <h6 class="card-title">@computer.Name</h6>
+                                    <p class="card-text">@computer.Price TL</p>
+                                    <a href="/Computer/Details/@computer.id" class="btn btn-info btn-sm">Detaylar</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</html>
+@section Styles {
+    <style>
+        .filter-group {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            padding: 10px;
+        }
+
+        .filter-header {
+            background: none;
+            border: none;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: left;
+            width: 100%;
+            padding: 5px 0;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+        }
+
+            .filter-header:focus {
+                outline: none;
+            }
+
+        .filter-content {
+            display: none;
+            padding: 10px 0;
+            border-top: 1px solid #ddd;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 5px;
+        }
+    </style>
+
+    <style>
+        .col-md-9 {
+            height: 80vh; /* Maksimum yüksekliği tanımlar */
+            overflow-y: auto; /* Yatay kaydırmayı engeller */
+            padding-right: 10px; /* Kaydırma çubuğu ile içerik arasında boşluk bırakır */
+            scrollbar-width: thin; /* İnce kaydırma çubuğu */
+        }
+
+            .col-md-9::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            .col-md-9::-webkit-scrollbar-thumb {
+                background-color: #ddd; /* Kaydırma çubuğu rengi */
+                border-radius: 4px;
+            }
+
+    </style>
+
+    <style>
+                .filter - panel {
+            height: 100vh; /* Tam ekran yüksekliği */
+            overflow - y: auto; /* Dikey kaydırma çubuğu */
+            scrollbar - width: thin; /* İnce kaydırma çubuğu (Firefox için) */
+        }
+
+        .filter - panel:: -webkit - scrollbar {
+            width: 8px; /* Kaydırma çubuğu genişliği */
+        }
+
+        .filter - panel:: -webkit - scrollbar - thumb {
+            background - color: #ccc; /* Kaydırma çubuğu rengi */
+            border - radius: 4px; /* Yuvarlatılmış köşeler */
+        }
+
+        .filter - panel:: -webkit - scrollbar - track {
+            background: #f9f9f9; /* Kaydırma çubuğu arka plan rengi */
+        }
+
+    </style>
+
+    <style>
+                .filter - content {
+            display: none; /* Varsayılan olarak gizlenir */
+        }
+        .filter - content.active {
+            display: block; /* Açıldığında gösterilir */
+        }
+
+    </style>
+
+    <style>
+        .filter-group {
+            max-height: calc(100vh - 300px); /* Daha fazla boşluk bırakıldı */
+            overflow-y: auto; /* Dikey kaydırma etkinleştirildi */
+            padding-right: 10px; /* Kaydırma çubuğu için boşluk */
+            scrollbar-width: thin; /* İnce kaydırma çubuğu */
+        }
+
+        .filter-footer {
+            position: sticky; /* Sabitlenmiş konum */
+            bottom: 0; /* Sayfanın en altına sabitlenir */
+            background-color: #f8f9fa; /* Arka plan rengi */
+            padding: 20px; /* Daha geniş iç boşluk */
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Üstte gölge efekti */
+            z-index: 10; /* Üstte görünmesini sağlar */
+            display: flex; /* Elemanları yatay hizalamak için */
+            flex-direction: column; /* Elemanları dikey hizalar */
+            gap: 15px; /* Elemanlar arasındaki boşluk */
+        }
+
+    </style>
+
+
+
+}
+
+@section Scripts {
+    <!-- noUiSlider CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css" rel="stylesheet" />
+    <!-- noUiSlider JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
+
+    <script>
+        // Ensure the brands array is defined
+        if (typeof brands === 'undefined') {
+            console.error("The 'brands' array is not defined. Ensure it is passed correctly from the backend.");
+        } else {
+            console.log("Brands Array:", brands); // Debug the brands array
+        }
+
+        // Initialize the price slider
+        const slider = document.getElementById('price-slider');
+        if (slider) {
+            noUiSlider.create(slider, {
+                start: [0, 50000], // Initial values
+                connect: true,    // Show a connecting bar between the handles
+                range: {
+                    'min': 0,
+                    'max': 50000
+                },
+                step: 1000,       // Increment step
+                format: {
+                    to: value => `${Math.round(value)} TL`,
+                    from: value => Number(value.replace(' TL', ''))
+                }
+            });
+
+            // Link slider values to input fields and display text
+            const minInput = document.getElementById('minPrice');
+            const maxInput = document.getElementById('maxPrice');
+            const sliderMin = document.getElementById('slider-min');
+            const sliderMax = document.getElementById('slider-max');
+
+            slider.noUiSlider.on('update', function (values, handle) {
+                if (handle === 0) {
+                    if (minInput) minInput.value = values[0].replace(' TL', '');
+                    if (sliderMin) sliderMin.innerText = values[0];
+                } else {
+                    if (maxInput) maxInput.value = values[1].replace(' TL', '');
+                    if (sliderMax) sliderMax.innerText = values[1];
+                }
+            });
+        } else {
+            console.error("The 'price-slider' element is not found in the DOM.");
+        }
+
+    </script>
+
+    <script>
+
+            // Autocomplete functionality for brands
+            const input = document.getElementById('autocompleteInput');
+            const suggestions = document.getElementById('suggestions');
+
+            if (input && suggestions) {
+                input.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase().trim();
+                    console.log("Input Query:", query); // Debug input query
+
+                    // Show suggestions only if the query has 2 or more characters
+                    if (query.length <script 2) {
+                        suggestions.style.display = 'none';
+                        return;
+                    }
+
+                    // Filter the brands array to find matches
+                    const filteredBrands = brands.filter(brand => brand.toLowerCase().includes(query));
+                    console.log("Filtered Brands:", filteredBrands); // Debug filtered results
+
+                    // Populate the suggestions list
+                    suggestions.innerHTML = '';
+                    if (filteredBrands.length > 0) {
+                        suggestions.style.display = 'block';
+                        filteredBrands.forEach(brand => {
+                            const li = document.createElement('li');
+                            li.textContent = brand;
+                            li.classList.add('list-group-item', 'list-group-item-action');
+                            li.style.cursor = 'pointer';
+                            li.addEventListener('click', () => {
+                                input.value = brand; // Set the clicked suggestion as the input value
+                                suggestions.style.display = 'none'; // Hide the suggestions
+                            });
+                            suggestions.appendChild(li);
+                        });
+                    } else {
+                        suggestions.style.display = 'none';
+                    }
+                });
+
+                // Hide suggestions when clicking outside the input or suggestions list
+                document.addEventListener('click', (e) => {
+                    if (!suggestions.contains(e.target) && e.target !== input) {
+                        suggestions.style.display = 'none';
+                    }
+                });
+            } else {
+                console.error("The 'autocompleteInput' or 'suggestions' element is not found in the DOM.");
+            }
+    </script>
+
+    <script>
+        const radioButtons = document.querySelectorAll('input[name="Brand"]');
+        const textInput = document.getElementById('autocompleteInput');
+
+        function clearTextInput() {
+            // Clear the text input when a radio button is clicked
+            textInput.value = ""; // Clear the text input field
+        }
+
+        function clearRadioButtons() {
+            // Uncheck all radio buttons when typing in the text input
+            radioButtons.forEach(radio => radio.checked = false);
+        }
+    </script>
+
+    <script>
+        // Tüm seçenekleri JSON olarak çekiyoruz
+        const dataOptions = {
+            brands: @Html.Raw(Json.Serialize(Model.CpuNames)),
+            gpus: @Html.Raw(Json.Serialize(Model.GpuNames)),
+            coolers: @Html.Raw(Json.Serialize(Model.CoolerNames)), // Cooler listesi
+        };
+
+        let selectedBrand = ""; // Seçilen işlemci markasını saklamak için
+        let selectedCooler = ""; // Seçilen cooler'ı saklamak için
+
+        // Universal datalist filter
+        function filterDatalist(inputId, datalistId, type) {
+            const input = document.getElementById(inputId);
+            const datalist = document.getElementById(datalistId);
+
+            if (!input || !datalist || !dataOptions[type]) {
+                console.error("Invalid input or datalist ID or options type.");
+                return;
+            }
+
+            const query = input.value.toLowerCase();
+            datalist.innerHTML = ''; // Mevcut seçenekleri temizle
+
+            // Filtreleme işlemi
+            dataOptions[type]
+                .filter(item => {
+                    const lowerItem = item.toLowerCase();
+                    // Eğer bir marka seçildiyse ve eşleşiyorsa
+                    if (type === "brands" && selectedBrand) {
+                        return lowerItem.startsWith(selectedBrand.toLowerCase()) && lowerItem.includes(query);
+                    }
+                    if (type === "coolers" && selectedCooler) {
+                        return lowerItem.startsWith(selectedCooler.toLowerCase()) && lowerItem.includes(query);
+                    }
+                    // Eğer seçim yapılmadıysa sadece query'e göre filtrele
+                    return lowerItem.includes(query);
+                })
+                .slice(0, 5) // İlk 5 sonucu al
+                .forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = item;
+                    datalist.appendChild(option);
+                });
+        }
+
+        // Marka seçildiğinde çağrılacak
+        function setSelectedBrand(brand) {
+            selectedBrand = brand; // Seçilen işlemci markasını ayarla
+            filterDatalist('autocompleteInputBrands', 'brandsList', 'brands'); // Datalist'i hemen güncelle
+        }
+
+        // Cooler seçildiğinde çağrılacak
+        function setSelectedCooler(cooler) {
+            selectedCooler = cooler; // Seçilen cooler'ı ayarla
+            filterDatalist('autocompleteInputCoolers', 'coolersList', 'coolers'); // Datalist'i hemen güncelle
+        }
+
+        // Event handler
+        function handleInput(event) {
+            switch (event.target.id) {
+                case 'autocompleteInputBrands':
+                    filterDatalist('autocompleteInputBrands', 'brandsList', 'brands');
+                    break;
+                case 'autocompleteInputGpus':
+                    filterDatalist('autocompleteInputGpus', 'gpuList', 'gpus');
+                    break;
+                case 'autocompleteInputCoolers':
+                    filterDatalist('autocompleteInputCoolers', 'coolersList', 'coolers');
+                    break;
+                // Yeni alanlar eklemek için buraya case ekleyebilirsiniz
+                default:
+                    console.warn("Unhandled input field:", event.target.id);
+                    break;
+            }
+        }
+
+        // Sayfa yüklendiğinde input alanlarını dinleyiciye bağla
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll('input[list]').forEach(input => {
+                input.addEventListener('input', handleInput);
+            });
+
+            // İşlemci markası seçildiğinde event bağlama
+            document.querySelectorAll('input[name="Brand"]').forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    setSelectedBrand(event.target.value); // Seçilen markayı ayarla
+                });
+            });
+
+            // Cooler seçildiğinde event bağlama
+            document.querySelectorAll('input[name="Cooler"]').forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    setSelectedCooler(event.target.value); // Seçilen cooler'ı ayarla
+                });
+            });
+        });
+
+
+    </script>
+
+    <script>
+    // Uncheck radio buttons when the user starts typing in the manual input field
+function clearStorageSelection() {
+    document.querySelectorAll('input[name="storageSize"]').forEach((radio) => {
+        radio.checked = false;
+    });
+}
+
+// Clear manual input when a predefined storage option is selected
+document.querySelectorAll('input[name="storageSize"]').forEach((radio) => {
+    radio.addEventListener('change', () => {
+        document.getElementById('manualStorageInput').value = ''; // Clear manual input
+        console.log(`Selected Storage: ${radio.value}GB`);
+    });
+});
+
+// Log manual storage input for debugging
+document.getElementById('manualStorageInput').addEventListener('input', (event) => {
+    console.log(`Manual Storage Input: ${event.target.value}GB`);
+});
+    </script>
+
+    <script>
+        function toggleFilter(id) {
+            const filterContent = document.getElementById(id);
+            if (filterContent.style.display === 'block') {
+                filterContent.style.display = 'none';
+            } else {
+                filterContent.style.display = 'block';
+            }
+        }
+
+
+    </script>
+
+    <script>
+        // RTX ve Radeon GPU seçeneklerini JSON olarak tanımlıyoruz
+        const gpuOptions = {
+            RTX4000: ["RTX 4060", "RTX 4070", "RTX 4080", "RTX 4090"],
+            RTX3000: ["RTX 3060", "RTX 3070", "RTX 3080"],
+            RTX2000: ["RTX 2060", "RTX 2070", "RTX 2080"],
+            RTX1000: ["RTX 1050", "RTX 1060", "RTX 1070", "RTX 1080"],
+            RX7000: ["RX 7900 XTX", "RX 7900 XT", "RX 7800 XT", "RX 7700 XT", "RX 7600"],
+            RX6000: ["RX 6950 XT", "RX 6800 XT", "RX 6700 XT"],
+            RX5000: ["RX 5700 XT", "RX 5700", "RX 5600 XT"],
+            RXVega: ["RX Vega 64", "RX Vega 56", "RX Vega 8"]
+        };
+
+        function displayGpuOptions(seriesCheckbox) {
+            const container = document.getElementById("gpuOptionsContainer");
+            const series = seriesCheckbox.value;
+
+            // Eğer checkbox işaretliyse, ilgili seriyi ekle
+            if (seriesCheckbox.checked) {
+                const seriesDiv = document.createElement("div");
+                seriesDiv.id = `gpuOptions_${series}`;
+                seriesDiv.className = "mt-3";
+
+                const seriesTitle = document.createElement("h6");
+                seriesTitle.innerText = `${series} Serisi`;
+
+                const optionsDiv = document.createElement("div");
+                optionsDiv.className = "d-flex flex-wrap";
+
+                // Seriye ait ekran kartlarını ekle
+                const options = gpuOptions[series];
+                if (!options) {
+                    console.error(`Seri ${series} için seçenekler bulunamadı.`);
+                    return;
+                }
+                options.forEach(gpu => {
+                    const option = document.createElement("div");
+                    option.className = "form-check me-3";
+
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.className = "form-check-input";
+                    checkbox.id = `gpu_${gpu}`;
+                    checkbox.value = gpu;
+                    checkbox.name = "GpuModels";
+
+                    const label = document.createElement("label");
+                    label.className = "form-check-label";
+                    label.setAttribute("for", `gpu_${gpu}`);
+                    label.innerText = gpu;
+
+                    option.appendChild(checkbox);
+                    option.appendChild(label);
+                    optionsDiv.appendChild(option);
+                });
+
+                seriesDiv.appendChild(seriesTitle);
+                seriesDiv.appendChild(optionsDiv);
+                container.appendChild(seriesDiv);
+            } else {
+                // Checkbox kaldırıldığında ilgili seriyi sil
+                const seriesDiv = document.getElementById(`gpuOptions_${series}`);
+                if (seriesDiv) {
+                    container.removeChild(seriesDiv);
+                }
+            }
+        }
+    </script>
+
+}
+
+
+
+

@@ -1,0 +1,189 @@
+﻿@page
+@model webApp.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Giriş Yap";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="form-container">
+    <h1>Giriş Yap</h1>
+    <form method="post">
+        <label for="email">E-posta Adresi</label>
+        <input type="email"
+               id="email"
+               name="Email"
+               required
+               oninvalid="customValidation(this)"
+               oninput="customValidation(this)"
+               title="Geçerli bir e-posta adresi girin." />
+
+        <label for="password">Şifre</label>
+        <input type="password"
+               id="loginPassword"
+               name="Password"
+               minlength="8"
+               maxlength="36"
+               required
+               oninvalid="customValidation(this)"
+               oninput="customValidation(this)"
+               title="Şifre en az 8, en fazla 36 karakter olmalıdır." />
+        <div class="checkbox-container">
+            <input type="checkbox" id="showPassword" onclick="togglePasswordVisibility()" />
+            <label for="showPassword">Şifreyi Göster</label>
+        </div>
+
+        <button type="submit">Giriş Yap</button>
+    </form>
+    <!-- Hata mesajı -->
+    @if (!ModelState.IsValid)
+    {
+        <p class="error-message">Geçersiz giriş bilgileri. Lütfen tekrar deneyin.</p>
+    }
+
+    <p>Hesabınız yok mu? <a href="/Account/Register">Kayıt ol</a></p>
+
+</div>
+<style>
+    .error-message {
+        color: darkred;
+        font-size: 14px;
+        margin-top: 10px;
+        text-align: center;
+    }
+</style>
+
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .form-container {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+    }
+
+        .form-container h1 {
+            color: #004aad;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .form-container label {
+            display: block;
+            margin-top: 10px;
+            text-align: left;
+            margin-left: 8px;
+            color: #333333;
+            font-weight: bold;
+        }
+
+        .form-container input[type="email"],
+        .form-container input[type="password"] {
+            width: 90%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 2px solid #cccccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-container button {
+            background-color: #004aad;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+            .form-container button:hover {
+                background-color: #00337a;
+            }
+
+        .form-container p {
+            color: #666666;
+            font-size: 12px;
+        }
+
+        .form-container a {
+            color: #004aad;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+            .form-container a:hover {
+                text-decoration: underline;
+            }
+
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+        margin-top: 0px;
+        text-align: left;
+        margin-left: 5px;
+    }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #cccccc;
+            border-radius: 3px;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .checkbox-container label {
+            font-size: 12px;
+            color: #333333;
+            margin: 0;
+        }
+</style>
+
+<script>
+    function customValidation(input) {
+        if (input.type === "password" && input.validity.tooShort) {
+            input.setCustomValidity("Şifre en az 8 karakter olmalıdır.");
+        } else if (input.type === "email" && input.validity.typeMismatch) {
+            input.setCustomValidity("Geçerli bir e-posta adresi girin.");
+        } else {
+            input.setCustomValidity("");
+        }
+    }
+
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById("loginPassword");
+        passwordField.type = passwordField.type === "password" ? "text" : "password";
+    }
+</script>
+
+<script>
+    function customValidation(input) {
+        if (input.type === "password" && input.validity.tooShort) {
+            input.setCustomValidity("Şifre en az 8 karakter olmalıdır.");
+        } else if (input.type === "email" && input.validity.typeMismatch) {
+            input.setCustomValidity("Geçerli bir e-posta adresi girin.");
+        } else {
+            input.setCustomValidity("");
+        }
+    }
+
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById("loginPassword");
+        passwordField.type = passwordField.type === "password" ? "text" : "password";
+    }
+</script>

@@ -1,0 +1,143 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AlVer</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/webApp.styles.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
+    <style>
+        body {
+            padding-top: 56px; /* Navbar yüksekliğini dengelemek için */
+        }
+
+        /* Navbar için özel stil */
+        .navbar-custom {
+            background: linear-gradient(90deg, #007BFF, #0056b3); /* Mavi degrade */
+            border-bottom: 2px solid #004085; /* Kontrastlı alt çizgi */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+        }
+
+            .navbar-custom .navbar-brand {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: #ffffff; /* Beyaz logo rengi */
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Hafif gölge */
+            }
+
+            .navbar-custom .nav-link {
+                color: #ffffff; /* Link rengi */
+                font-weight: 500;
+            }
+
+                .navbar-custom .nav-link:hover {
+                    color: #cce7ff; /* Hover efekti */
+                    text-decoration: underline;
+                }
+
+            .navbar-custom .dropdown-menu {
+                background-color: #0056b3; /* Menü arka planı */
+                border: none;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Menü gölgesi */
+            }
+
+            .navbar-custom .dropdown-item {
+                color: #ffffff; /* Dropdown item rengi */
+            }
+
+                .navbar-custom .dropdown-item:hover {
+                    background-color: #004085; /* Hover arka plan rengi */
+                    color: #cce7ff; /* Hover metin rengi */
+                }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-custom fixed-top">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/HomePage">
+                    <!-- Görsel URL'sini sabitleyin -->
+                    <img src="https://media.discordapp.net/attachments/1107465177651232820/1323346321054240948/gQG1SHfBRbC1r_d2iCKngg.png?ex=67742dcd&is=6772dc4d&hm=6c9c919d6d7154a656da4dfafc82d0d167c3520cccda06d6dda1e4638f7f206c&=&format=webp&quality=lossless&width=480&height=455" alt="Logo" style="height: 40px; width: auto; margin-right: 10px;">
+                    Al Ver
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-page="/Index">Satın al</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-page="/Privacy">Poliçe</a>
+                        </li>
+                        @if (HttpContextAccessor.HttpContext.Session.GetString("UserRole")?.Trim() == "admin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-page="/Admin/UploadData">Veri Yükleme</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-page="/Admin/ControlListings">Kontrol</a>
+                            </li>
+                        }
+                        @if (HttpContextAccessor.HttpContext.Session.GetString("UserRole")?.Trim() == "User")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-page="/Account/NewListing">İlan Yarat</a>
+                            </li>
+                        }
+                    </ul>
+                    <ul class="navbar-nav">
+                        @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+                        @if (HttpContextAccessor.HttpContext.Session.GetString("UserId") != null)
+                        {
+                            <li class="nav-item dropdown text-light">
+                                <!-- Profil Simgesi ve Kullanıcı Adı -->
+                                <a class="nav-link dropdown-toggle d-flex align-items-center text-light" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="gap: 10px;">
+                                    <img src="https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png"
+                                         alt="Profile Icon"
+                                         style="width:30px; height:30px; border-radius:50%;" />
+                                    <span>@HttpContextAccessor.HttpContext.Session.GetString("UserName")</span> <!-- Kullanıcı Adı -->
+                                </a>
+                                <!-- Dropdown Menü -->
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-page="/Account/Profile">Profile</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Logout">Logout</a></li>
+                                </ul>
+                            </li>
+                        }
+
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-page="/Account/Login">Giriş Yap</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - AlVer - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

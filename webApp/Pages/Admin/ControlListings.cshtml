@@ -1,0 +1,101 @@
+﻿@page
+@model ControlListingsModel
+@{
+    ViewData["Title"] = "Control Listings";
+}
+
+<h1>Manage Listings</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Listings != null && Model.Listings.Any())
+        {
+            foreach (var listing in Model.Listings)
+            {
+                <tr>
+                    <td>@listing.id</td>
+                    <td>@listing.Name</td>
+                    <td>@listing.Price.ToString()</td>
+                    <td>
+                        <form method="post">
+                            <input type="hidden" name="id" value="@listing.id" />
+                            <button type="submit" name="Action" value="Delete" class="btn btn-danger action-btn">Sil</button>
+                            <button type="submit" name="Action" value="Approve" class="btn btn-success action-btn">Onayla</button>
+                            <button type="button" class="btn btn-primary" onclick="openEditPopup(@listing.id, '@listing.Name', @listing.Price, '@listing.Description', '@listing.MotherboardName', '@listing.CpuName', '@listing.RamName', '@listing.GpuName', '@listing.storageName', '@listing.PowerSupplyName', '@listing.CaseName')">Edit</button>
+
+                          
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">No listings available.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Edit Listing Popup -->
+<div id="editPopup" style="display:none; position:fixed; top:20%; left:30%; width:40%; background-color:white; border:1px solid #ccc; padding:20px; z-index:1000;">
+    <h3>Edit Listing</h3>
+    <form method="post" id="editForm">
+        <input type="hidden" id="editId" name="id" />
+        <div>
+            <label for="editName">Name:</label>
+            <input type="text" id="editName" name="name" class="form-control" />
+        </div>
+        <div>
+            <label for="editPrice">Price:</label>
+            <input type="number" id="editPrice" name="price" class="form-control" step="0.01" />
+        </div>
+        <div style="margin-top:10px;">
+            <button type="submit" formaction="/ControlListings/Edit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" onclick="closeEditPopup()">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function openEditPopup(id, name, price) {
+        document.getElementById("editId").value = id;
+        document.getElementById("editName").value = name;
+        document.getElementById("editPrice").value = price;
+        document.getElementById("editPopup").style.display = "block";
+    }
+
+    function closeEditPopup() {
+        document.getElementById("editPopup").style.display = "none";
+    }
+</script>
+
+<script>
+    function openEditPopup(id, name, price, description, motherboard, cpu, ram, gpu, storage, powerSupply, caseItem) {
+        document.getElementById("editId").value = id;
+        document.getElementById("editName").value = name;
+        document.getElementById("editPrice").value = price;
+        document.getElementById("editDescription").value = description;
+        document.getElementById("editMotherboard").value = motherboard;
+        document.getElementById("editCPU").value = cpu;
+        document.getElementById("editRAM").value = ram;
+        document.getElementById("editGPU").value = gpu;
+        document.getElementById("editStorage").value = storage;
+        document.getElementById("editPowerSupply").value = powerSupply;
+        document.getElementById("editCase").value = caseItem;
+        document.getElementById("editPopup").style.display = "block";
+    }
+
+    function closeEditPopup() {
+        document.getElementById("editPopup").style.display = "none";
+    }
+</script>

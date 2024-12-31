@@ -1,0 +1,77 @@
+﻿@page
+@model UploadDataModel
+@{
+    ViewData["Title"] = "Veri Yükleme";
+}
+
+<h1>JSON Verisi Yükle</h1>
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="ClassName">Bir sınıf seçin:</label>
+        <select id="ClassName" name="ClassName" class="form-control">
+            <option value="Select">Select</option>
+            <option value="Motherboard">Motherboard</option>
+            <option value="Cooler">Cooler</option>
+            <option value="CPU">CPU</option>
+            <option value="PowerSupply">PowerSupply</option>
+            <option value="GPU">GPU</option>
+            <option value="Case">Case</option>
+            <option value="RAM">RAM</option>
+            <option value="Storage">Storage</option>
+        </select>
+    </div>
+
+    <div class="form-group mt-3">
+        <label for="JsonFile">JSON Dosyasını Seçin:</label>
+        <input type="file" id="JsonFile" name="JsonFile" class="form-control" />
+
+        <!-- Sürükle Bırak Alanı -->
+        <div id="drop-zone" class="border border-dashed mt-3 p-3 text-center">
+            Dosyaları buraya sürükleyin veya tıklayın
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Yükle</button>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.ResultMessage))
+{
+    <div class="alert alert-info mt-3">
+        @Model.ResultMessage
+    </div>
+}
+
+@section Scripts {
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('JsonFile');
+
+        // Dosya bırakıldığında işleme
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('bg-light');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('bg-light');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('bg-light');
+
+            // Sadece bir dosyayı al
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files; // Input elementine dosyayı aktar
+            }
+        });
+
+        // Tıklama desteği
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+    </script>
+}
+
+        

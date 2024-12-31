@@ -1,0 +1,179 @@
+﻿@page
+@model webApp.Pages.Account.ProfileModel
+@{
+    ViewData["Title"] = "Profil";
+}
+
+<h1 class="profile-header">@ViewData["Title"]</h1>
+
+<div class="profile-container">
+    @foreach (var listing in Model.VisualListings)
+    {
+        <div class="profile-card">
+            <div class="profile-image">
+                <img src="@listing.ImageUrls.FirstOrDefault() ?? " https: //via.placeholder.com/150"" alt="Profile Image" />
+                <div class="image-actions">
+                    <form method="post">
+                        <input type="hidden" name="ListingId" value="@listing.id" />
+                        @if(listing.isActive)
+						{
+							<button type="submit" name="Action" value="Deactivate" class="btn btn-warning action-btn">İnaktif Et</button>
+						}
+						else
+						{
+							<button type="submit" name="Action" value="Activate" class="btn btn-success action-btn">Aktif Et</button>
+						}
+                        <button type="submit" name="Action" value="Delete" class="btn btn-danger action-btn">Sil</button>
+                    </form>
+                </div>
+            </div>
+            <div class="profile-details">
+                <h2>@listing.Name</h2>
+                <p class="description">@listing.Description</p>
+                <p><strong>Fiyat:</strong> @listing.Price?.ToString("C") ?? "Belirtilmemiş"</p>
+            </div>
+
+            <div class="components-section">
+                <h3>Bileşenler</h3>
+                <ul>
+                    <li><strong>GPU:</strong> @listing.GpuName</li>
+                    <li><strong>CPU:</strong> @listing.CpuName</li>
+                    <li><strong>Anakart:</strong> @listing.MotherboardName</li>
+                    <li>
+                        <strong>Depolama:</strong>
+                        <ul>
+                            @foreach (var depolama in listing.storageName)
+                            {
+                                <li>@depolama</li>
+                            }
+                        </ul>
+                    </li>
+                    <li><strong>Kasa:</strong> @listing.CaseName</li>
+                    <li><strong>Güç Kaynağı:</strong> @listing.PowerSupplyName</li>
+                    <li><strong>RAM:</strong> @listing.RamName</li>
+                    <li>
+                        <strong>Soğutucular:</strong>
+                        <ul>
+                            @foreach (var cooler in listing.coolerNames)
+                            {
+                                <li>@cooler</li>
+                            }
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    }
+</div>
+
+@section styles {
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .profile-header {
+            text-align: center;
+            color: #007bff;
+            margin-top: 20px;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-image img {
+            border-radius: 10px;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .image-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+            .btn-warning:hover {
+                background-color: #e0a800;
+            }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+            .btn-danger:hover {
+                background-color: #c82333;
+            }
+
+        .profile-details h2 {
+            margin: 0;
+            color: #343a40;
+        }
+
+        .profile-details .description {
+            color: #6c757d;
+            margin: 5px 0;
+        }
+
+        .components-section h3 {
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .components-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+            .components-section ul li {
+                padding: 5px 0;
+                border-bottom: 1px solid #dee2e6;
+            }
+
+                .components-section ul li strong {
+                    color: #343a40;
+                }
+
+            .components-section ul ul {
+                padding-left: 20px;
+                margin: 5px 0;
+            }
+    </style>
+}
